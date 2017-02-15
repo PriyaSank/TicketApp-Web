@@ -21,17 +21,8 @@
 	</form>
 	<br>
 	<br>
-	<form action="../admin/assignTicket" method="GET">
-	<button type="submit">Assign ticket</button>
-	</form>
-	<br>
-	<br>
-<form action="../admin/reassignTicket" method="GET">
-	<button type="submit">Reassign ticket</button>
-	</form>
+	
 
-	<br>
-	<br>
 	<br>
 	<br>
 <form action="../admin/logout" method="GET">

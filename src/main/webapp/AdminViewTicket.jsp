@@ -20,9 +20,10 @@ ${ERROR}
 					<th>Subject</th>
 					<th>Description</th>
 					
-					<th>status</th>
-				
-					
+					<th>Status</th>
+					<th>Employee Id</th>
+					<th>Assign Ticket</th>
+					<th>Delete Ticket</th>
 				</tr>
 			</thead>
 	<c:forEach var="c" items="${TICKET_LIST}">
@@ -36,8 +37,9 @@ ${ERROR}
 					<td>${c.description}</td>
 				
 					<td>${c.status}</td>
-				
-					
+					<td>${c.emp.id}</td>
+					<td><a href="../admin/assignPage?ticId=${c.id}">Assign</a></td>
+						<td><a href="../admin/deleteTicket?ticId=${c.id}">Delete</a></td>
 					
 				</tr>
 			</tbody>

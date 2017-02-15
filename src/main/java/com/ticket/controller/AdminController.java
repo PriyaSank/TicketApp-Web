@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ticket.dao.EmployeeDAO;
+import com.ticket.exception.PersistenceException;
 import com.ticket.exception.ServiceException;
 import com.ticket.model.EmployeeModel;
 import com.ticket.model.RoleModel;
@@ -25,12 +26,12 @@ public class AdminController {
 	EmployeeDAO empDAO = new EmployeeDAO();
 	
 	@GetMapping("/viewTickets")
-	public String view(HttpSession session, ModelMap map) throws ServiceException {
-
+	public String view(HttpSession session, ModelMap map) throws ServiceException, PersistenceException {
+		EmployeeDAO empDAO=new EmployeeDAO();
 		EmployeeModel a = (EmployeeModel)session.getAttribute("LOGGED_IN_ADMIN");
-		
+		int depId=empDAO.getDepartmentId(a.getEmailId());
 		 List<TicketDetailsModel> ticketList =
-		 empSer.viewTicketByDepartment(a.getRole().getId());
+		 empSer.viewTicketByDepartment(depId);
 
 		 map.addAttribute("TICKET_LIST", ticketList);
 		 if (ticketList == null) {
@@ -39,49 +40,37 @@ public class AdminController {
 		return "../AdminViewTicket.jsp";
 	}
 
-	@GetMapping("/assignTicket")
-	public String assign() throws ServiceException {
-
+	@GetMapping("/assignPage")
+	public String assign(@RequestParam("ticId") int ticketId,HttpSession session ) throws ServiceException {
+		session.setAttribute("Ticket_id1", ticketId);
 		return "../AssignTicket.jsp";
 	}
 
 	@GetMapping("/assignEmp")
-	public String assignTicket(@RequestParam("ticId") int ticId, @RequestParam("empId") int toEmpId, HttpSession session)
+	public String assignTicket( @RequestParam("empId") int toEmpId, HttpSession session)
 			throws ServiceException {
+		
 		EmployeeModel b = (EmployeeModel) session.getAttribute("LOGGED_IN_ADMIN");
-System.out.println(b.getEmailId() + "aa");
-		if (empSer.assignTicket(b.getEmailId(), toEmpId, ticId)) {
+		int ticketId = (int) session.getAttribute("Ticket_id1");
+	
+		if (empSer.assignTicket(b.getEmailId(), toEmpId, ticketId)) {
 
 			return "redirect:../AdminMainPage.jsp";
 		} else
-			return "redirect:../Index.jsp";
-	}
-
-	@GetMapping("/reassignTicket")
-	public String reassign() throws ServiceException {
-
-		return "../ReassignTicket.jsp";
-	}
-
-	@GetMapping("/reassignTic")
-	public String reassignTic(@RequestParam("ticId") int ticId, @RequestParam("empId") int emp1Id,
-			@RequestParam("toEmpId") int toEmpId) throws ServiceException {
-
-
-		if (empSer.reassignTicket(emp1Id, toEmpId, ticId)) {
-
+		{
 			return "redirect:../AdminMainPage.jsp";
-		} else
-			return "redirect:../Index.jsp";
 	}
+		
+	}
+
 	@GetMapping("/logout")
 	public String logout(HttpSession session){
 		session.invalidate();
 		return "redirect:../index.jsp";
 	}
-//	@GetMapping("/deleteTicket")
-//	public String delete(@RequestParam("ticId") int ticketId,ModelMap map) throws ServiceException {
-//		empSer.deleteTicket(ticketId);
-//		return "../AdminMainPage.jsp";
-//	}
+	@GetMapping("/deleteTicket")
+	public String delete(@RequestParam("ticId") int ticketId,ModelMap map) throws ServiceException {
+		empSer.deleteTicket(ticketId);
+		return "../AdminMainPage.jsp";
+	}
 }

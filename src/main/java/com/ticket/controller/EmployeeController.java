@@ -46,8 +46,11 @@ public class EmployeeController {
 					return "../AdminMainPage.jsp";
 				} else {
 					session.setAttribute("LOGGED_IN_EMP", emp);
+					EmployeeModel empV = (EmployeeModel) session.getAttribute("LOGGED_IN_EMP");
+					System.out.println(empV);
 					return "../EmployeeMainPage.jsp";
 				}
+				
 			}
 		} catch (ServiceException e) {
 
@@ -112,6 +115,7 @@ public class EmployeeController {
 	@GetMapping("/reassignPage")
 	public String reassignTic(@RequestParam("ticId") int ticketId, HttpSession session) throws ServiceException {
 		session.setAttribute("Ticket_id2", ticketId);
+		
 		return "../Reassign.jsp";
 	}
 	
@@ -119,13 +123,13 @@ public class EmployeeController {
 	public String reassign(@RequestParam("emp2Id") int emp2Id, HttpSession session,ModelMap map)  {
 		EmployeeModel emp1 = (EmployeeModel) session.getAttribute("LOGGED_IN_EMP");
 		int ticketId = (int) session.getAttribute("Ticket_id2");
-		System.out.println(emp1.getId()+"one");
+		System.out.println(emp1.getEmailId()+"one");
 		System.out.println(emp2Id+"one");
 		System.out.println(ticketId+"one");
 		try {
-			if (empSer.reassignTicket(emp1.getId(), emp2Id, ticketId)) {
+			if (empSer.reassignTicket(emp1.getEmailId(), emp2Id, ticketId)) {
 
-				return "../EmpMainPage.jsp";
+				return "../EmployeeMainPage.jsp";
 			} 
 		} catch (ServiceException e) {
 			map.addAttribute("ERROR",e.getMessage());

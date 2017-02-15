@@ -14,7 +14,8 @@
 	<br>
 
 	<form action="../admin/assignEmp" method="GET">
-		Ticket Id : <input type="text" name="ticId" required autofocus /> <br><br>
+		
+
 		Employee Id : <input
 			type="text" name="empId" required /><br><br><br>
 		<button type="submit">Assign</button><br>
